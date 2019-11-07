@@ -1,4 +1,23 @@
 <?php require_once "validador_acesso.php" ?>
+<?php
+
+  // Array que irá conter os chamados
+  $chamados - array();
+
+  // Abrindo arquivo.hd
+  $arquivo = fopen('arquivo.hd','r');
+
+  // Percorrendo o arquivo enquanto houver registros (linhas)
+  while(!feof($arquivo)) {
+    // Recuperando o contéudo da linha
+    $registro = fgets($arquivo); 
+    $chamados[] = $registro;
+  }
+
+  // Fechando o arquivo aberto
+  fclose($arquivo);
+
+?>
 
 <html>
   <head>
@@ -40,24 +59,35 @@
             </div>
             
             <div class="card-body">
-              
-              <div class="card mb-3 bg-light">
-                <div class="card-body">
-                  <h5 class="card-title">Título do chamado...</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Categoria</h6>
-                  <p class="card-text">Descrição do chamado...</p>
 
+              <!-- Listando chamados -->
+              <?php foreach($chamados as $chamado) { ?>
+                
+                <?php
+                  $chamado_dados = explode('#',$chamado);
+
+                  if($_SESSION['perfil_id'] == 2){
+                    if($_SESSION['id'] != $chamados_dados[0]) {
+                      continue;
+                    }
+                  }
+
+                  if(count($chamado_dados) < 3) {
+                    continue;
+                  }
+                ?>
+
+                <div class="card mb-3 bg-light">
+                  <div class="card-body">
+                    <h5 class="card-title"> <?= $chamado_dados[1] ?> </h5>
+                    <h6 class="card-subtitle mb-2 text-muted"> <?= $chamado_dados[2] ?> </h6>
+                    <p class="card-text"> <?= $chamado_dados[3] ?> </p>
+
+                  </div>
                 </div>
-              </div>
 
-              <div class="card mb-3 bg-light">
-                <div class="card-body">
-                  <h5 class="card-title">Título do chamado...</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Categoria</h6>
-                  <p class="card-text">Descrição do chamado...</p>
-
-                </div>
-              </div>
+              <?php } ?>
+              <!-- Fim da listagem dos chamados -->
 
               <div class="row mt-5">
                 <div class="col-6">
