@@ -10,6 +10,6 @@ services:
         MYSQL_ROOT_PASSWORD: 12345
         MYSQL_DATABASE: estudos
     volumes: 
-        - ./data:/var/lib/mysql
+        - ./data:/var/lib/mysql/estudos
     ports: 
         - '3306:3306'
