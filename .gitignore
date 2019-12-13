@@ -1,1 +1,6 @@
-~/
+/mysql/data/mysql
+/mysql/data/performance_schema
+/mysql/data/ib_logfile0
+/mysql/data/ib_logfile1
+/mysql/data/ibdata1
+/mysql/data/auto.cnf

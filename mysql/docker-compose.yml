@@ -4,12 +4,13 @@ version: '3.1'
 services:
 
   db:
-    image: mysql
+    image: mysql:5.6
+    restart: always
     container_name: mysql 
     environment:
         MYSQL_ROOT_PASSWORD: 12345
         MYSQL_DATABASE: estudos
     volumes: 
-        - ./data:/var/lib/mysql/estudos
+        - ./data:/var/lib/mysql
     ports: 
         - '3306:3306'
