@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+
+  db:
+    image: httpd:2.4
+    restart: always
+    container_name: apache 
+    volumes: 
+        - ./:/usr/local/apache2/htdocs/
+    ports: 
+        - '8080:80'
