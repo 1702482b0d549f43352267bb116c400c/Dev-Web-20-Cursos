@@ -6,6 +6,7 @@
         public $data_fim;
         public $numeroVendas;
         public $totalVendas;
+        public $clientesInativos;
 
         public function __get($atributo) {
             return $this->$atributo;
@@ -66,8 +67,9 @@
             ';
 
             $stmt = $this->conexao->prepare($query);
-            $stmt->bindValue(':data_inicio',$this->dashboard->__get('data_inicio'));
-            $stmt->execute(':data_fim',$this->dashboard->__get('data_fim'));
+            $stmt->bindValue(':data_inicio', $this->dashboard->__get('data_inicio'));
+            $stmt->bindValue(':data_fim', $this->dashboard->__get('data_fim'));
+            $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_OBJ);
         }
@@ -84,9 +86,42 @@
 
             $stmt = $this->conexao->prepare($query);
             $stmt->bindValue(':data_inicio',$this->dashboard->__get('data_inicio'));
-            $stmt->execute(':data_fim',$this->dashboard->__get('data_fim'));
+            $stmt->bindValue(':data_fim',$this->dashboard->__get('data_fim'));
+            $stmt->execute();
 
             return $stmt->fetch(PDO::FETCH_OBJ);
+        }
+
+        public function getClientesInativos() {
+            $query = '
+                SELECT 
+                    COUNT(*) AS clientes_inativos
+                FROM
+                    tb_clientes
+                WHERE
+                    cliente_ativo = 0 
+            ';
+
+            $statement = $this->conexao->prepare($query);
+            $statement->execute();
+
+            return $statement->fetch(PDO::FETCH_OBJ);
+        }
+
+        public function getClientesAtivos() {
+            $query = '
+                SELECT 
+                    COUNT(*) AS clientes_ativos
+                FROM
+                    tb_clientes
+                WHERE
+                    cliente_ativo = 1 
+            ';
+
+            $statement = $this->conexao->prepare($query);
+            $statement->execute();
+
+            return $statement->fetch(PDO::FETCH_OBJ);
         }
 
     }
@@ -99,12 +134,14 @@
     $mes = $competencia[1];
     $dias_do_mes = cal_days_in_month(CAL_GREGORIAN, $mes, $ano);
 
-    $dashboard->__set('data_fim',$ano.'-'.$mes.'-01');
+    $dashboard->__set('data_inicio',$ano.'-'.$mes.'-01');
     $dashboard->__set('data_fim',$ano.'-'.$mes.'-'.$dias_do_mes);
 
     $bd = new Bd($conexao, $dashboard);
 
     $dashboard->__set('numeroVendas', $bd->getNumeroVendas());
     $dashboard->__set('totalVendas', $bd->getTotalVendas());
+    $dashboard->__set('clientesInativos', $bd->getClientesInativos());
+
     echo json_encode($dashboard);
 ?>
