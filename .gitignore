@@ -4,3 +4,7 @@
 /mysql/data/ib_logfile1
 /mysql/data/ibdata1
 /mysql/data/auto.cnf
+
+composer.lock
+composer.phar
+miniframework/vendor
